@@ -17,7 +17,7 @@ Package.onTest(function(api) {
 });
 
 function configurePackage(api) {
-  api.versionsFrom('METEOR@0.9.0');
+  api.versionsFrom('METEOR@0.9.2');
   api.use(['tracker', 'underscore', 'mongo', 'reactive-var'], ['client']);
 
   api.add_files([
