@@ -1,7 +1,7 @@
 search-source
 =============
 
-### Reactive Data Source for building search solutions with Meteor
+#### Reactive Data Source for building search solutions with Meteor
 
 If you are new to search source, it's a good idea to look at this introductory [article](https://meteorhacks.com/implementing-an-instant-search-solution-with-meteor.html) on MeteorHacks. 
 
