@@ -1,4 +1,139 @@
 search-source
 =============
 
-Reactive Data Source for Search - works with any backend
+### Reactive Data Source for building search solutions with Meteor
+
+If you are new to search source, it's a good idea to look at this introductory [article](https://meteorhacks.com/implementing-an-instant-search-solution-with-meteor.html) on MeteorHacks. 
+
+## Installation
+
+~~~
+meteor add meteorhacks:search-source
+~~~
+
+### Creating a source in client
+
+~~~js
+var options = {
+  keepHistory: 1000 * 60 * 5,
+  localSearch: true
+};
+var fields = ['packageName', 'description'];
+
+PackageSearch = new SearchSource('packages', fields, options);
+~~~
+
+* First parameter for the source is the name of the source itself. You need to use it for defining the data source on the server.
+* second arguments is the number of fields to search on the client (used for client side search and text transformation)
+* set of options. Here are they
+    * `keepHistory` - cache the search data locally. You need to give an expire time(in millis) to cache it on the client. Caching is done based on the search term. Then if you search again for that term, it search source won't ask the server to get data again.
+    * `localSearch` - allow to search locally with the data it has.
+
+### Define the data source on the server
+
+In the server, get data from any backend and send those data to the client as shown below. You need to return an array of documents where each of those object consists of `_id` field.
+
+~~~js
+SearchSource.defineSource('packages', function(searchText, options) {
+  var options = {sort: {isoScore: -1}, limit: 20};
+  
+  if(searchText) {
+    var regExp = buildRegExp(searchText);
+    var selector = {packageName: regExp, description: regExp};
+    return Packages.find(selector, options).fetch();
+  } else {
+    return Packages.find({}, options).fetch();
+  }
+});
+
+function buildRegExp(searchText) {
+  // this is dumb implementation
+  var parts = searchText.trim().split(' ');
+  return new RegExp("(" + parts.join('|') + ")", "ig");
+}
+~~~
+
+### Get the reactive data source
+
+You can get the reactive data source with the `PackageSearch.getData` api. This is an example usage of that:
+
+~~~js
+Template.searchResult.helpers({
+  getPackages: function() {
+    return PackageSearch.getData({
+      transform: function(matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>")
+      },
+      sort: {_score: -1}
+    });
+  }
+});
+~~~
+
+`.getData()` api accepts an object with options. These are the options you can pass:
+
+* `transform` - a transform function to alter the selected search texts. See above for an example usage.
+* `sort` - an object with MongoDB sort specifiers
+* `limit` - no of objects to limit
+
+### Searching
+
+Finally we can invoke search queries by invoking following API.
+
+~~~js
+PackageSearch.search("the text to search");
+~~~
+
+### Status
+
+You can get the status of the search source by invoking following API. It's reactive too.
+
+~~~
+var status = PackageSearch.getStatus();
+~~~
+
+Status has following fields depending on the status.
+
+* loading - indicator when loading
+* loaded - indicator after loaded
+* error - the error object, mostly if backend data source throws an error
+
+### Metadata
+
+With metadata, you get some useful information about search along with the search results. These metadata can be time it takes to process the search or the number of results for this search term.
+
+You can get the metadata with following API. It's reactive too.
+
+~~~js
+var metadata = PackageSearch.getMetadata();
+~~~
+
+Now we need a way to send metadata to the client. This is how we can do it. You need to change the server side search source as follows
+
+~~~js
+SearchSource.defineSource('packages', function(searchText, options) {
+  var data = getSearchResult(searchText);
+  var metadata = getMetadata();
+
+  return {
+    data: data,
+    metadata: metadata
+  }
+});
+~~~
+
+### Get Current Search Query
+
+You can get the current search query with following API. It's reactive too.
+
+~~~js
+var searchText = PackageSearch.getCurrentQuery();
+~~~
+
+### Clean History
+
+You can clear the stored history (if enabled the `keepHistory` option) via the following API.
+
+~~~js
+PackageSearch.cleanHistory();
+~~~
