@@ -64,7 +64,7 @@ Template.searchResult.helpers({
       transform: function(matchText, regExp) {
         return matchText.replace(regExp, "<b>$&</b>")
       },
-      sort: {_score: -1}
+      sort: {isoScore: -1}
     });
   }
 });
