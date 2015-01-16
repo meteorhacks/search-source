@@ -33,6 +33,8 @@ PackageSearch = new SearchSource('packages', fields, options);
 
 In the server, get data from any backend and send those data to the client as shown below. You need to return an array of documents where each of those object consists of `_id` field.
 
+> Just like inside a method, you can use `Meteor.userId()` and `Meteor.user()` inside a source definition.
+
 ~~~js
 SearchSource.defineSource('packages', function(searchText, options) {
   var options = {sort: {isoScore: -1}, limit: 20};
