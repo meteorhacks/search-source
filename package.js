@@ -5,6 +5,10 @@ Package.describe({
   "name": "meteorhacks:search-source"
 });
 
+Npm.depends({
+  "body-parser": "1.10.1"
+});
+
 Package.onUse(function(api) {
   configurePackage(api);
   api.export(['SearchSource']);
@@ -18,7 +22,11 @@ Package.onTest(function(api) {
 
 function configurePackage(api) {
   api.versionsFrom('METEOR@0.9.2');
-  api.use(['tracker', 'underscore', 'mongo', 'reactive-var'], ['client']);
+  api.use([
+    'tracker', 'underscore', 'mongo', 'reactive-var',
+    'http'
+  ], ['client']);
+  api.use('meteorhacks:picker@1.0.1', 'server');
 
   api.add_files([
     'lib/server.js',
