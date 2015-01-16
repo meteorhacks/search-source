@@ -1,6 +1,6 @@
 Package.describe({
   "summary": "Reactive Data Source for Search",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "git": "https://github.com/meteorhacks/search-source.git",
   "name": "meteorhacks:search-source"
 });
