@@ -3,7 +3,7 @@ search-source
 
 #### Reactive Data Source for building search solutions with Meteor
 
-If you are new to search source, it's a good idea to look at this introductory [article](https://meteorhacks.com/implementing-an-instant-search-solution-with-meteor.html) on MeteorHacks. 
+If you are new to search source, it's a good idea to look at this introductory [article](https://meteorhacks.com/implementing-an-instant-search-solution-with-meteor.html) on MeteorHacks.
 
 ## Installation
 
@@ -38,7 +38,7 @@ In the server, get data from any backend and send those data to the client as sh
 ~~~js
 SearchSource.defineSource('packages', function(searchText, options) {
   var options = {sort: {isoScore: -1}, limit: 20};
-  
+
   if(searchText) {
     var regExp = buildRegExp(searchText);
     var selector = {packageName: regExp, description: regExp};
@@ -138,4 +138,16 @@ You can clear the stored history (if enabled the `keepHistory` option) via the f
 
 ~~~js
 PackageSearch.cleanHistory();
+~~~
+
+### Defining Data Source in the Client
+
+Sometime, we don't need to fetch data from the server. We need to get it from a data source aleady available on the client. So, this is how we do it:
+
+~~~js
+PackageSearch.fetchData = function(searchText, options, success) {
+  SomeOtherDDPConnection.call('getPackages', searchText, options, function(err, data) {
+    success(err, data);
+  });
+};
 ~~~
