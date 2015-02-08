@@ -7,13 +7,13 @@ If you are new to search source, it's a good idea to look at this introductory [
 
 ## Installation
 
-~~~
+```
 meteor add meteorhacks:search-source
-~~~
+```
 
 ### Creating a source in client
 
-~~~js
+```js
 var options = {
   keepHistory: 1000 * 60 * 5,
   localSearch: true
@@ -21,7 +21,7 @@ var options = {
 var fields = ['packageName', 'description'];
 
 PackageSearch = new SearchSource('packages', fields, options);
-~~~
+```
 
 * First parameter for the source is the name of the source itself. You need to use it for defining the data source on the server.
 * second arguments is the number of fields to search on the client (used for client side search and text transformation)
@@ -35,7 +35,7 @@ In the server, get data from any backend and send those data to the client as sh
 
 > Just like inside a method, you can use `Meteor.userId()` and `Meteor.user()` inside a source definition.
 
-~~~js
+```js
 SearchSource.defineSource('packages', function(searchText, options) {
   var options = {sort: {isoScore: -1}, limit: 20};
 
@@ -53,13 +53,13 @@ function buildRegExp(searchText) {
   var parts = searchText.trim().split(' ');
   return new RegExp("(" + parts.join('|') + ")", "ig");
 }
-~~~
+```
 
 ### Get the reactive data source
 
 You can get the reactive data source with the `PackageSearch.getData` api. This is an example usage of that:
 
-~~~js
+```js
 Template.searchResult.helpers({
   getPackages: function() {
     return PackageSearch.getData({
@@ -70,7 +70,7 @@ Template.searchResult.helpers({
     });
   }
 });
-~~~
+```
 
 `.getData()` api accepts an object with options. These are the options you can pass:
 
@@ -82,17 +82,17 @@ Template.searchResult.helpers({
 
 Finally we can invoke search queries by invoking following API.
 
-~~~js
+```js
 PackageSearch.search("the text to search");
-~~~
+```
 
 ### Status
 
 You can get the status of the search source by invoking following API. It's reactive too.
 
-~~~
+```
 var status = PackageSearch.getStatus();
-~~~
+```
 
 Status has following fields depending on the status.
 
@@ -106,13 +106,13 @@ With metadata, you get some useful information about search along with the searc
 
 You can get the metadata with following API. It's reactive too.
 
-~~~js
+```js
 var metadata = PackageSearch.getMetadata();
-~~~
+```
 
 Now we need a way to send metadata to the client. This is how we can do it. You need to change the server side search source as follows
 
-~~~js
+```js
 SearchSource.defineSource('packages', function(searchText, options) {
   var data = getSearchResult(searchText);
   var metadata = getMetadata();
@@ -122,32 +122,32 @@ SearchSource.defineSource('packages', function(searchText, options) {
     metadata: metadata
   }
 });
-~~~
+```
 
 ### Get Current Search Query
 
 You can get the current search query with following API. It's reactive too.
 
-~~~js
+```js
 var searchText = PackageSearch.getCurrentQuery();
-~~~
+```
 
 ### Clean History
 
 You can clear the stored history (if enabled the `keepHistory` option) via the following API.
 
-~~~js
+```js
 PackageSearch.cleanHistory();
-~~~
+```
 
 ### Defining Data Source in the Client
 
 Sometime, we don't need to fetch data from the server. We need to get it from a data source aleady available on the client. So, this is how we do it:
 
-~~~js
+```js
 PackageSearch.fetchData = function(searchText, options, success) {
   SomeOtherDDPConnection.call('getPackages', searchText, options, function(err, data) {
     success(err, data);
   });
 };
-~~~
+```
