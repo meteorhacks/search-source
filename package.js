@@ -1,8 +1,8 @@
 Package.describe({
   "summary": "Reactive Data Source for Search",
-  "version": "1.2.1",
-  "git": "https://github.com/Sewdn/search-source.git",
-  "name": "sewdn:search-source"
+  "version": "1.2.0",
+  "git": "https://github.com/meteorhacks/search-source.git",
+  "name": "meteorhacks:search-source"
 });
 
 Npm.depends({
