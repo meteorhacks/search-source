@@ -72,11 +72,30 @@ Template.searchResult.helpers({
 });
 ```
 
-`.getData()` api accepts an object with options. These are the options you can pass:
+`.getData()` api accepts an object with options (and an optional argument to ask for a cursor instead of a fetched array; see example below). These are the options you can pass:
 
 * `transform` - a transform function to alter the selected search texts. See above for an example usage.
 * `sort` - an object with MongoDB sort specifiers
 * `limit` - no of objects to limit
+* `docTransform` - a transform function to transform the documents in the search result. Use this for computed values or model helpers. (see example below)
+
+
+```js
+Template.searchResult.helpers({
+  getPackages: function() {
+    return PackageSearch.getData({
+      docTransform: function(doc) {
+        return _.extend(doc, {
+          owner: function() {
+            return Meteor.users.find({_id: this.ownerId})
+          }
+        })
+      },
+      sort: {isoScore: -1}
+    }, true);
+  }
+});
+```
 
 ### Searching
 
