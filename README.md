@@ -49,9 +49,12 @@ SearchSource.defineSource('packages', function(searchText, options) {
 });
 
 function buildRegExp(searchText) {
-  // this is dumb implementation
-  var parts = searchText.trim().split(' ');
-  return new RegExp("(" + parts.join('|') + ")", "ig");
+  var words = searchText.trim().split(/[ \-\:]+/);
+  var exps = _.map(words, function(word) {
+    return "(?=.*" + word + ")";
+  });
+  var fullExp = exps.join('') + ".+";
+  return new RegExp(fullExp, "i");
 }
 ```
 
