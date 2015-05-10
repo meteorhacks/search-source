@@ -143,6 +143,28 @@ SearchSource.defineSource('packages', function(searchText, options) {
 });
 ```
 
+### Passing Options with Search
+
+We can also pass some options while searching. This is the way we can implement pagination and other extra functionality.
+
+Let's pass some options to the server:
+
+```js
+// In the client
+var options = {page: 10};
+PackageSearch.search("the text to search", options);
+```
+
+Now you can get the options object from the server. See:
+
+```js
+// In the server
+SearchSource.defineSource('packages', function(searchText, options) {
+  // do anything with options
+  console.log(options); // {"page": 10}
+});
+```
+
 ### Get Current Search Query
 
 You can get the current search query with following API. It's reactive too.
