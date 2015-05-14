@@ -2,7 +2,7 @@ Package.describe({
   "summary": "Reactive Data Source for Search",
   "version": "1.3.0",
   "git": "https://github.com/meteorhacks/search-source.git",
-  "name": "mrt:search-source"
+  "name": "meteorhacks:search-source"
 });
 
 Npm.depends({
