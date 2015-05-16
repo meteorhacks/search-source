@@ -108,6 +108,38 @@ Finally we can invoke search queries by invoking following API.
 PackageSearch.search("the text to search");
 ```
 
+### Pagination
+
+You can provide options to limit your search query and implement pagination into your search: `skip` and `limit`. SearchSource will also sanitize your limiting options to only fetch data from you backend that is not already in history (that is, if you enabled local history caching by configuring a value for keepInHistory).
+
+```js
+PackageSearch.search("the text to search", {
+  skip: 0,
+  limit: 12
+});
+```
+
+For example, when you do the following subsequent searches with the same text string to seacrh for
+```js
+[
+  {skip: 0, limit: 24},
+  {skip: 0, limit: 36},
+  {skip: 12, limit: 36},
+  {skip: 24, limit: 24},
+];
+```
+
+SearchSource will send the following requests on your backend (when keepInhistory is enabled):
+```js
+[
+  {skip: 0, limit: 24},
+  {skip: 24, limit: 12},
+  {skip: 36, limit: 12}
+];
+```
+
+To see an elaborate example on how to implement a paged search application, go to (http://infinitesearch.meteor.com).
+
 ### Status
 
 You can get the status of the search source by invoking following API. It's reactive too.
