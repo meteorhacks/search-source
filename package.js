@@ -24,8 +24,11 @@ function configurePackage(api) {
   api.versionsFrom('METEOR@0.9.2');
   api.use([
     'tracker', 'underscore', 'mongo', 'reactive-var',
-    'http', 'ejson', 'check'
+    'http', 'ejson', 'check', 'ddp'
   ], ['client']);
+
+  api.use('ddp', ['server']);
+  
   api.use('meteorhacks:picker@1.0.1', 'server');
 
   api.add_files([
