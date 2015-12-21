@@ -27,7 +27,7 @@ function configurePackage(api) {
     'http', 'ejson', 'check', 'ddp'
   ], ['client']);
 
-  api.use('ddp', ['server']);
+  api.use(['ejson', 'check', 'ddp'], ['server']);
   
   api.use('meteorhacks:picker@1.0.1', 'server');
 
