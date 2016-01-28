@@ -100,6 +100,40 @@ Template.searchResult.helpers({
 });
 ```
 
+### Use reactive data in search results
+
+By default, the contents returned by `getData()` is not reactive in the sense of it reflecting the current state of the mongo database. To use reactive content, do the following when creating a SearchSource object on the client
+
+```js
+var options = {
+  keepHistory: 1000 * 60 * 5,
+  localSearch: true,
+  collection: Documents, // Collection to reflect on the client
+  subscriptionName: 'documents.byIds' // Use subscription by this name
+};
+
+// Some fields
+const fields = [ 'name', 'description' ];
+
+const DocumentSearch = new SearchSource('docs', fields, options);
+```
+
+and on the server, publish the documents by ids
+
+```js
+Meteor.publish('documents.byIds', function (ids) {
+  check(ids, [ String ]);
+
+  return Documents.find({
+    _id: {
+      $in: ids
+    }
+  });
+});
+```
+
+and the rest is as usual. One thing to notice is that `getData()` cannot return a cursor if reactive items are used. This is because we sort documents on a score field that is not attached to the documents itself, so mongo cannot take care of the ordering.
+
 ### Searching
 
 Finally we can invoke search queries by invoking following API.
