@@ -1,12 +1,12 @@
 Package.describe({
   "summary": "Reactive Data Source for Search",
-  "version": "1.4.3
+  "version": "1.5.0",
   "git": "https://github.com/meteorhacks/search-source.git",
   "name": "meteorhacks:search-source"
 });
 
 Npm.depends({
-  "body-parser": "1.10.1"
+  "body-parser": "1.19.0"
 });
 
 Package.onUse(function(api) {
@@ -21,21 +21,19 @@ Package.onTest(function(api) {
 });
 
 function configurePackage(api) {
-  api.versionsFrom('METEOR@0.9.2');
+  api.versionsFrom('1.9');
   api.use([
-    'tracker', 'underscore', 'mongo', 'reactive-var',
-    'http', 'ejson', 'check', 'ddp'
+    'tracker', 'mongo', 'reactive-var',
+    'http', 'ejson'
   ], ['client']);
 
   api.use(['ejson', 'check', 'ddp'], ['server']);
   
-  api.use('meteorhacks:picker@1.0.1', 'server');
+  api.use('communitypackages:picker@1.1.0', 'server');
 
-  api.add_files([
-    'lib/server.js',
-  ], ['server']);
+  api.use('ecmascript');
 
-  api.add_files([
-    'lib/client.js',
-  ], ['client']);
+  api.mainModule('lib/server.js', 'server');
+
+  api.mainModule('lib/client.js', 'client');
 }
